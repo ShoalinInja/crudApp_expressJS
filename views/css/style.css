@@ -1,0 +1,219 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin: 20px 0;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  min-width: 250px;
+  min-height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body h3 {
+  margin: 10px 0;
+  color: #444;
+  font-size: 1.2em;
+}
+
+.card-body p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.add-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e0e0e0;
+  min-width: 250px;
+  min-height: 300px;
+  font-size: 4em;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-card:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-5px);
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 24px;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 8px 0;
+  list-style: none;
+  z-index: 10;
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #333;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+.card.add-profile {
+  width: 200px;
+  height: 250px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  transition: border-color 0.3s;
+}
+
+.card.add-profile:hover {
+  border-color: #333;
+}
+
+.card.add-profile .add-icon {
+  font-size: 48px;
+  font-weight: bold;
+}
+/* Modal Container */
+.form-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 50%;
+  max-width: 500px;
+  background: #ffffff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.4s ease;
+  z-index: 1000;
+}
+
+/* When Modal is Active */
+.form-modal.active {
+  transform: translateX(0);
+}
+
+/* Form Container */
+.form-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+/* Form Inputs */
+.form-container label {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+.form-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-button button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-button button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.form-button button[type="button"] {
+  background-color: #f44336;
+  color: white;
+}

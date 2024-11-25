@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Management</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+      }
+
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+      #userCardsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .card {
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 300px;
+        max-height: 300px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .cardInfo {
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 300px;
+        max-height: 300px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        transform: scale(1.1); /* Increases size by 10% */
+        cursor: pointer; /* Changes the cursor to indicate the card is clickable */
+      }
+
+      .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: fill;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .card-body {
+        padding: 15px;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-body h3 {
+        margin: 10px 0;
+        color: #444;
+        font-size: 1.2em;
+      }
+
+      .card-body p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .add-card,
+      .delete-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e0e0e0;
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 300px;
+        font-size: 4em;
+        color: #666;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .add-card:hover {
+        background-color: #d0d0d0;
+        transform: translateY(-5px);
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      /* Setting icon */
+      .dropdown-toggle {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        padding: 8px 0;
+        list-style: none;
+        z-index: 10;
+      }
+
+      .dropdown-menu .dropdown-item {
+        padding: 8px 16px;
+        text-decoration: none;
+        color: #333;
+        display: block;
+        transition: background-color 0.2s;
+      }
+
+      .dropdown-menu .dropdown-item:hover {
+        background-color: #f0f0f0;
+      }
+
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+      .card.add-profile {
+        width: 200px;
+        height: 250px;
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        text-align: center;
+        color: #666;
+        font-size: 18px;
+        transition: border-color 0.3s;
+      }
+
+      .card.add-profile:hover {
+        border-color: #333;
+      }
+
+      .card.add-profile .add-icon {
+        font-size: 48px;
+        font-weight: bold;
+      }
+      /* Modal Container */
+      .form-modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 50%;
+        max-width: 500px;
+        background: #ffffff;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        z-index: 1100;
+      }
+
+      /* When Modal is Active */
+      .form-modal.active {
+        transform: translateX(0);
+      }
+
+      /* Form Container */
+      .form-container {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+
+      .form-container h2 {
+        margin-bottom: 20px;
+      }
+
+      /* Form Inputs */
+      .form-container label {
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .form-container input,
+      .form-container select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      /* Buttons */
+      .form-button {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .form-button button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .form-button button[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .form-button button[type="button"] {
+        background-color: #f44336;
+        color: white;
+      }
+      /* Overlay styles */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        z-index: 1000; /* Higher than other elements */
+        display: none; /* Hidden by default */
+      }
+      .image-container {
+        display: flex; /* Enables flexbox */
+        justify-content: center; /* Centers content horizontally */
+        align-items: center; /* Centers content vertically */
+        width: 100%; /* Fills the width of the parent */
+        height: 100%; /* Adjust as needed, or set a fixed height */
+        padding: 10px; /* Optional: Adds some space inside the container */
+        box-sizing: border-box; /* Ensures padding doesn't increase the width */
+      }
+
+      .image-selector {
+        position: relative;
+        text-align: center; /* Ensures the label is properly centered */
+      }
+
+      .image-selector img {
+        width: 150px; /* Adjust the size of the preview image */
+        height: 150px; /* Keeps the image square */
+        object-fit: cover; /* Ensures the image maintains its aspect ratio */
+        border-radius: 50%; /* Makes the image circular */
+        cursor: pointer; /* Indicates the image is clickable */
+        border: 2px solid #00b98e; /* Optional: Adds a border around the image */
+      }
+
+      .image-selector input[type="file"] {
+        border: solid green;
+        cursor: pointer;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay" id="overlay" onclick="closeAddProfileForm()"></div>
+    <h1>Profile</h1>
+
+    <div class="container">
+      <!-- Example Customer Cards -->
+      <div id="userCardsContainer"></div>
+      <!-- This is where user cards will be inserted dynamically -->
+    </div>
+
+    <div class="form-modal" id="addProfileForm">
+      <div class="form-container">
+        <h2>Add Profile</h2>
+        <form
+          action="/users/"
+          method="POST"
+          enctype="multipart/form-data"
+          id="addprofileForm"
+        >
+          <div class="image-container">
+            <div class="image-selector">
+              <label for="addImage" class="image-label">
+                <img
+                  id="imagePreview"
+                  src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+                  alt="Profile Preview"
+                />
+              </label>
+              <input
+                type="file"
+                id="addImage"
+                name="addImage"
+                accept="image/*"
+                onchange="previewImage(event)"
+              />
+            </div>
+          </div>
+
+          <label for="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            oninput="filterUsers()"
+            required
+          />
+
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" />
+          <label for="UID">UID:</label>
+          <input type="text" id="UID" name="UID" required />
+
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender">
+            <option value="" disabled selected>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label for="age">Age:</label>
+          <input type="number" id="age" name="age" min="1" max="120" />
+
+          <label for="designation">Designation:</label>
+          <input type="text" id="designation" name="designation" />
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" pattern="^[0-9]{10}$" />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" />
+
+          <div class="form-button">
+            <button type="submit">Add</button>
+            <button type="button" onclick="closeAddProfileForm()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Form Modal -->
+    <div class="form-modal" id="updateProfileForm">
+      <div class="form-container">
+        <h2>Update Profile</h2>
+        <form
+          enctype="multipart/form-data"
+          id="profileForm"
+          onsubmit="updateUser(event)"
+        >
+          <input type="hidden" id="upUserId" name="upUserId" required />
+          <div class="image-container">
+            <div class="image-selector">
+              <label for="upImage" class="image-label">
+                <img
+                  id="upimagePreview"
+                  src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+                  alt="Profile Preview"
+                />
+              </label>
+              <input
+                type="file"
+                id="upImage"
+                name="uploadImage"
+                accept="image/*"
+                onchange="upPreviewImage(event)"
+              />
+            </div>
+          </div>
+          <label for="upFirstName">First Name:</label>
+          <input type="text" id="upFirstName" name="upFirstName" required />
+
+          <label for="upLastName">Last Name:</label>
+          <input type="text" id="upLastName" name="upLastName" />
+
+          <label for="upGender">Gender:</label>
+          <select id="upGender" name="upGender">
+            <option value="" disabled selected>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label for="upAge">Age:</label>
+          <input type="number" id="upAge" name="upAge" min="1" max="120" />
+
+          <label for="upDesignation">Designation:</label>
+          <input type="text" id="upDesignation" name="upDesignation" />
+          <label for="phone">Phone:</label>
+          <input type="tel" id="upPhone" name="upPhone" pattern="^[0-9]{10}$" />
+
+          <label for="upEmail">Email:</label>
+          <input type="email" id="upEmail" name="upEmail" />
+
+          <div class="form-button">
+            <button type="submit">Update</button>
+            <button type="button" onclick="closeAddProfileForm()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Fetch all users from the API endpoint
+      var fetchUser;
+      let holdTimeout;
+      let hideTimeout;
+      fetch("/users/api")
+        .then((response) => response.json())
+        .then((allUsers) => {
+          // Call the function to render the user cards on page load
+          renderUserCards(allUsers);
+          fetchUser = allUsers;
+          console.log("fetchUser: ", fetchUser); // Now you have the data in your JavaScript
+
+          // Call the function to hide all cards
+          hideAllCards();
+          // You can process the data further here
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+      function renderUserCards(allUsers) {
+        const container = document.getElementById("userCardsContainer");
+
+        // Clear the container before adding new content
+        container.innerHTML = "";
+
+        // Iterate over each user and generate the HTML for the cards
+        allUsers.forEach((user) => {
+          const cardHTML = `
+                <div class="card" 
+                 onmousedown="handleHold('${user._id}')" 
+     onmouseup="clearHold()" 
+     onmouseleave="clearHold()" 
+     ontouchstart="handleHold('${user._id}')" 
+     ontouchend="clearHold()"
+                onclick="window.location.href='users/${user._id}'" >
+                <img src="${user.image.replace(
+                  "public/",
+                  ""
+                )}" alt="Customer Image" />
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h3>${user.firstName} ${user.lastName}</h3>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                               <ul class="dropdown-menu">
+                <li>
+                  <a
+                    href="#"
+                    class="dropdown-item"
+                    onclick="event.stopPropagation(); openUpdateNewProfile('${
+                      user._id
+                    }')"
+             >Update</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="dropdown-item"
+                    onclick="event.stopPropagation();deleteUser('${user._id}')"
+                    >Delete</a
+                  >
+                </li>
+              </ul>
+                            </div>
+                        </div>
+                        <p>UID: ${user.UID}</p>
+                        <p>Designation: ${user.designation}</p>
+                    </div>
+                </div>
+                <div class="cardInfo hidden" onclick="window.location.href='users/${
+                  user._id
+                }'" id="${user._id}">
+              
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h3>${user.firstName} ${user.lastName}</h3>
+                          
+                        </div>
+                        <p>Email: ${user.email}</p>
+                        <p>Phone: ${user.phone}</p> 
+                        <p>Experience: ${user.expereince || 0 + " Years"}</p>
+                        <p>Domain: ${user.domain || "Not Available"}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+          // Append the new card HTML to the container
+          container.innerHTML += cardHTML;
+        });
+        const addCardHtml = `<!-- Add New Profile Card -->
+      <div class="add-card" onclick="openAddProfileForm()">+</div>
+    </div>`;
+        // Append the new card HTML to the container
+        container.innerHTML += addCardHtml;
+      }
+
+      // Function to filter users based on firstName input
+      function filterUsers() {
+        const searchQuery = document
+          .getElementById("firstName")
+          .value.toLowerCase();
+
+        // Filter the users based on the search query
+        filteredUsers = fetchUser.filter(
+          (user) =>
+            user.firstName.toLowerCase().includes(searchQuery) ||
+            user.lastName.toLowerCase().includes(searchQuery)
+        );
+
+        // Re-render the user cards with the filtered list
+        renderUserCards(filteredUsers);
+      }
+
+      function openUpdateNewProfile(userId) {
+        console.log("Update Profile User ID: ", userId);
+        // Find the user by ID from allUsers
+        // Show overlay and modal form
+        document.getElementById("overlay").style.display = "block";
+
+        document.getElementById("updateProfileForm").classList.add("active");
+        console.log("Fetch Users: ", fetchUser); // Check the user
+
+        const user = fetchUser.find((user) => user._id === userId);
+        console.log(user); // Check the user
+        // Populate form fields with the user data
+        document.getElementById("upUserId").value = user._id;
+        document.getElementById("upimagePreview").src = user.image.replace(
+          "public/",
+          ""
+        );
+
+        document.getElementById("upFirstName").value = user.firstName || "";
+        document.getElementById("upLastName").value = user.lastName || "";
+        document.getElementById("upGender").value = user.gender || "";
+        document.getElementById("upAge").value = user.age || "";
+        document.getElementById("upDesignation").value = user.designation || "";
+        document.getElementById("upGender").value = user.gender || "";
+        document.getElementById("upPhone").value = user.phone || "";
+        document.getElementById("upEmail").value = user.email || "";
+      }
+      // Function to Open Modal
+      function openAddProfileForm() {
+        // Show overlay and modal form
+        document.getElementById("overlay").style.display = "block";
+
+        document.getElementById("addProfileForm").classList.add("active");
+      }
+      // Function to Close Modal
+      function closeAddProfileForm() {
+        // Hide overlay and modal form
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("addProfileForm").classList.remove("active");
+        document.getElementById("updateProfileForm").classList.remove("active");
+      }
+      // Function to Close Modal
+      function deleteAllProfile() {
+        // Hide overlay and modal form
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("addProfileForm").classList.remove("active");
+        document.getElementById("updateProfileForm").classList.remove("active");
+      }
+
+      function deleteUser(userId) {
+        const confirmDelete = confirm(
+          "Are you sure you want to delete this user?"
+        );
+        if (!confirmDelete) return;
+
+        // Make a DELETE request to the server
+        fetch(`http://localhost:8000/users/${userId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            alert(data.message || "User deleted successfully");
+            // Optionally, refresh the page or update the UI
+            location.reload(); // Reload the page
+          })
+          .catch((error) => {
+            console.error("Error deleting user:", error);
+            alert("Failed to delete user");
+          });
+      }
+      async function updateUser(event) {
+        event.preventDefault(); // Prevent form submission
+        console.log("Inside Update : ", event);
+        event.preventDefault(); // Prevent form submission
+
+        const form = document.getElementById("profileForm"); // Get the form element
+        console.log("Inside Update2 : ", form);
+        if (!form) {
+          console.error("Form not found");
+          return;
+        }
+
+        // Create a new FormData object from the form
+        const formData = new FormData(form);
+        // Create a new FormData object to hold updated keys
+        const newFormData = new FormData();
+
+        // Define a mapping of old keys to new keys
+        const keyMapping = {
+          upFirstName: "firstName", // Example: change upFirstName to first_name
+          upLastName: "lastName",
+          upGender: "gender",
+          upAge: "age",
+          upDesignation: "designation",
+          upPhone: "phone",
+          upEmail: "email",
+          upImage: "image", // Change image1 to profile_image
+        };
+
+        // Iterate through original FormData and add it to the newFormData with modified keys
+        for (let [key, value] of formData.entries()) {
+          const newKey = keyMapping[key] || key; // Use new key if mapped, otherwise keep the original key
+          newFormData.append(newKey, value); // Add to the new FormData
+        }
+        // Print the FormData to see its contents
+        for (let [key, value] of newFormData.entries()) {
+          console.log(key, value); // This should log the form data keys and values
+        }
+
+        // Get values from the form inputs
+        const userId = document.getElementById("upUserId").value;
+        const firstName = document.getElementById("upFirstName").value;
+        const lastName = document.getElementById("upLastName").value;
+        const gender = document.getElementById("upGender").value;
+        const age = document.getElementById("upAge").value;
+        const designation = document.getElementById("upDesignation").value;
+        const phone = document.getElementById("upPhone").value;
+        const email = document.getElementById("upEmail").value;
+
+        // Prepare the data to send
+        const updatedUserData = {
+          firstName,
+          lastName,
+          gender,
+          age,
+          designation,
+          phone,
+          email,
+        };
+        console.log("New value to be updated: ", newFormData);
+        try {
+          // Send the PATCH request with FormData
+          const response = await fetch(
+            `http://localhost:8000/users/${userId}`,
+            {
+              method: "PATCH", // Use 'PATCH' if you need to patch, or 'POST' based on your server
+              body: newFormData,
+            }
+          );
+
+          // Handle server response
+          if (response.ok) {
+            const data = await response.json();
+            alert("Profile updated successfully!");
+            window.location.reload(); // Optionally reload the page or redirect
+          } else {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.error}`);
+          }
+        } catch (error) {
+          console.error("Error updating profile:", error);
+          alert("An error occurred while updating the profile.");
+        }
+        // try {
+        //   // Make a PUT request to update the user
+        //   const response = await fetch(
+        //     `http://localhost:8000/users/${userId}`,
+        //     {
+        //       method: "PATCH", // HTTP method
+        //       headers: {
+        //         "Content-Type": "application/json", // Set content type to JSON
+        //       },
+        //       body: JSON.stringify(updatedUserData), // Send the updated user data
+        //     }
+        //   );
+
+        //   // Handle the response from the server
+        //   if (response.ok) {
+        //     const data = await response.json();
+        //     alert("User updated successfully");
+        //     window.location.reload(); // This reloads the current page
+        //     // You can perform additional actions here, like redirecting or updating the UI
+        //   } else {
+        //     const errorData = await response.json();
+        //     alert(`Error: ${errorData.error}`);
+        //   }
+        // } catch (error) {
+        //   console.error("Error updating user:", error);
+        //   alert("An error occurred while updating the user.");
+        // }
+      }
+      // Function to hide all cards
+      function hideAllCards() {
+        fetchUser.forEach((user) => {
+          const card = document.getElementById(user._id);
+          if (card) {
+            // card.classList.add("hidden"); // Add 'hidden' class (assumes you have CSS for it)
+            // OR
+            card.style.display = "none"; // Directly hide it
+          }
+        });
+      }
+
+      function handleHold(userId) {
+        // Clear any existing hold and hide timeouts
+        clearTimeout(holdTimeout);
+        clearTimeout(hideTimeout);
+
+        // Set a timeout for the "tap and hold" action
+        holdTimeout = setTimeout(() => {
+          // Show the details card for the specific ID
+          console.log("Mosue has been hold by : ", userId);
+          const card = document.getElementById(userId);
+          if (card) {
+            card.style.display = "block"; // Show it
+          }
+        }, 1000); // 1-second hold duration
+      }
+
+      function clearHold() {
+        // Clear the timeout to cancel the hold action
+        clearTimeout(holdTimeout);
+      } // Function to handle Command + N
+      function handleCommandN(event) {
+        // Check if the pressed keys are Command (or Control) and N
+        if ((event.metaKey || event.ctrlKey) && event.key === "n") {
+          event.preventDefault(); // Prevent the default browser behavior
+          myCustomFunction(); // Call your custom function
+        }
+      }
+
+      // Your custom function
+      function myCustomFunction() {
+        openAddProfileForm();
+      }
+      // JavaScript to preview the uploaded image
+      function previewImage(event) {
+        console.error("Inside function from add profile"); // Debugging: Check if a file is selected
+        const reader = new FileReader();
+        reader.onload = function () {
+          const imagePreview = document.getElementById("imagePreview");
+          imagePreview.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+      function upPreviewImage(event) {
+        console.error("Inside function"); // Debugging: Check if a file is selected
+        const file = event.target.files[0]; // Get the selected file
+        if (!file) {
+          console.error("No file selected"); // Debugging: Check if a file is selected
+          return;
+        }
+
+        const reader = new FileReader(); // Create a new FileReader instance
+
+        reader.onload = function () {
+          const upImagePreview = document.getElementById("upimagePreview"); // The image preview element
+          if (upImagePreview) {
+            upImagePreview.src = reader.result; // Set the preview image source
+          } else {
+            console.error("Preview element not found");
+          }
+        };
+
+        reader.onerror = function (error) {
+          console.error("Error reading file: ", error); // Handle file reading errors
+        };
+
+        reader.readAsDataURL(file); // Start reading the file as a data URL
+      }
+
+      // Add event listener to the document
+      document.addEventListener("keydown", handleCommandN);
+    </script>
+  </body>
+</html>
